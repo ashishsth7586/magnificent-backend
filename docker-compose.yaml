@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  magnificent-db:
+    image: postgres:14.4-alpine
+    platform: linux/amd64
+    environment:
+      - POSTGRES_DB=app
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  magnificent-web:
+    platform: linux/amd64
+    stdin_open: true
+    tty: true
+    build:
+      context: ${APP_ROOT}  # APP_ROOT is export variable given from MAKEFILE
+      dockerfile: ${APP_ROOT}/Dockerfile
+    volumes:
+      - ${APP_ROOT}:/code
+    ports:
+      - "8000:8000"
+    env_file:
+      - ${APP_ROOT}/env/Makefile.override
+    expose:
+      - "8000"
+
+  # test:
+  #   platform: linux/amd64
+  #   stdin_open: true
+  #   tty: true
+  #   build:
+  #     context: ${APP_ROOT}
+  #     dockerfile: ${APP_ROOT}/docker/Dockerfile.test
+  #   volumes:
+  #     - ${APP_ROOT}:/code
+  #   env_file:
+  #     - ${APP_ROOT}/env/Makefile.override
+  #   profiles:
+  #     - "test"
+
+
+  magnificent-pgadmin:
+    restart: always
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - "5001:80"
+    depends_on:
+      - magnificent-db
+    logging:
+      driver: none
+
+networks:
+  default:
+    name: "magnificent-dev-network"

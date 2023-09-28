@@ -1,3 +1,4 @@
+Makefile.override
 # Django #
 *.log
 *.pot
