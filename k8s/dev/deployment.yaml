@@ -5,13 +5,13 @@ metadata:
     secrets.doppler.com/reload: "true"
   creationTimestamp: null
   labels:
-    app: magnificent-app
-  name: magnificent-app
+    app: magnificent-api
+  name: magnificent-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: magnificent-app
+      app: magnificent-api
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -21,11 +21,11 @@ spec:
     metadata:
       creationTimestamp: null
       labels:
-        app: magnificent-app
+        app: magnificent-api
     spec:
       containers:
         image: 
-        name: magnificent-app
+        name: magnificent-api
         ports:
         - containerPort: 8000
         resources: {}
