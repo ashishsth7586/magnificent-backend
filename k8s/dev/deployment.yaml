@@ -12,24 +12,24 @@ spec:
   selector:
     matchLabels:
       app: magnificent-app
-    strategy:
-      rollingUpdate:
-        maxSurge: 25%
-        maxUnavailable: 25%
-      type: RollingUpdate
-    template:
-      metadata:
-        creationTimestamp: null
-        labels:
-          app: magnificent-app
-      spec:
-        containers:
-        - envFrom:
-          - secretRef:
-              name: magnificent-app-secrets
-          image: nginx
-          name: magnificent-app
-          ports:
-          - containerPort: 8000
-          resources: {}
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: magnificent-app
+    spec:
+      containers:
+      - envFrom:
+        - secretRef:
+            name: dev-magnificent-app-secrets
+        image: nginx
+        name: magnificent-app
+        ports:
+        - containerPort: 8000
+        resources: {}
 status: {}
