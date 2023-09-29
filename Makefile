@@ -77,18 +77,18 @@ docker/get-admin-token: ## get Django Admin Token
 docker/run-django: ## Run Django command.
 	@docker-compose run --rm magnificent-web python manage.py $(filter-out $@,$(MAKECMDGOALS))
 
-# build-and-push-prod: ## Build and push docker image for production
-#  @docker build $(APP_ROOT) -f $(APP_ROOT)/Dockerfile -t $(IMAGE_NAME)
-#  @docker push $(IMAGE_NAME)
+build-and-push-prod: ## Build and push docker image for production
+ @docker build $(APP_ROOT) -f $(APP_ROOT)/Dockerfile -t $(IMAGE_NAME)
+ @docker push $(IMAGE_NAME)
 
-# update-argoconfig:
-#  @kubectl set image --filename k8s/dev/deployment.yaml magnificent-api=$(IMAGE_NAME) --local -o yaml > new-deployment.yaml
-#  @cat new-deployment.yaml
-#  @rm -rf k8s/dev/deployment.yaml
-#  @mv new-deployment.yaml k8s/dev/deployment.yaml
+update-argoconfig:
+ @kubectl set image --filename k8s/dev/deployment.yaml magnificent-api=$(IMAGE_NAME) --local -o yaml > new-deployment.yaml
+ @cat new-deployment.yaml
+ @rm -rf k8s/dev/deployment.yaml
+ @mv new-deployment.yaml k8s/dev/deployment.yaml
 
-# deploy: build-and-push-prod update-argoconfig ## Deploy to kubernetes
-#  @echo "Completed!"
+deploy: build-and-push-prod update-argoconfig ## Deploy to kubernetes
+ @echo "Completed!"
 
 help:
 	@echo -e "\n Usage: make [target]\n"
