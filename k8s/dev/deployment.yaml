@@ -24,9 +24,6 @@ spec:
         app: magnificent-app
     spec:
       containers:
-      # - envFrom:
-      #   - secretRef:
-      #       name: dev-magnificent-app-secrets
         image: nginx
         name: magnificent-app
         ports:
