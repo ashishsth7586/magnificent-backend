@@ -1,11 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    secrets.doppler.com/reload: "true"
-  creationTimestamp: null
-  labels:
-    app: magnificent-api
   name: magnificent-api
 spec:
   replicas: 1
@@ -24,8 +19,8 @@ spec:
         app: magnificent-api
     spec:
       containers:
-        image: 
-        name: magnificent-api
+      - name: magnificent-api
+        image: django
         ports:
         - containerPort: 8000
         resources: {}

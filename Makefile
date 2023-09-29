@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 .DEFAULT_GOAL := help
 
-APP_NAME := user-api
+APP_NAME := magnificent-api
 export APP_ROOT = $(shell pwd)
 
 -include $(APP_ROOT)/Makefile.override
@@ -84,8 +84,8 @@ build-and-push-prod: ## Build and push docker image for production
 # 	@cat new-deployment.yaml
 # 	@rm -rf k8s/dev/deployment.yaml
 # 	@mv new-deployment.yaml k8s/dev/deployment.yaml
-	
-deploy: build-and-push-prod # update-argoconfig ## Deploy to kubernetes
+# update-argoconfig ## Deploy to kubernetes
+deploy: build-and-push-prod 
 	@echo "Completed!"
 
 help:
