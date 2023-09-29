@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 .DEFAULT_GOAL := help
 
-APP_NAME := magnificent-api
+APP_NAME := user-api
 export APP_ROOT = $(shell pwd)
 
 -include $(APP_ROOT)/Makefile.override
@@ -26,8 +26,6 @@ create-super-user:
 run-django:
 	@python manage.py $(filter-out $@,$(MAKECMDGOALS))
 
-create-admin:
-	@python3 manage.py create_admin_auth0 "$(AUTH_ADMIN_EMAIL)" "$(AUTH_ADMIN_PASSWORD)"
 
 #############################################
 #             JOBS FOR LOCAL                #
@@ -35,7 +33,7 @@ create-admin:
 
 docker/up: ## Start the application.
 	@docker-compose up -d
-	@docker-compose logs magnificent-web --follow
+	@docker-compose logs user-web --follow
 
 docker/start: ## Start the application.
 	@docker-compose up -d
@@ -46,9 +44,9 @@ docker/stop: ## Stop the application.
 docker/down: ## Stop and remove containers, networks, images, and volumes.
 	@docker-compose down
 
-docker/build: ## Build the application. # @docker-compose --profile test build
+docker/build: ## Build the application.
 	@docker-compose build
-	
+	@docker-compose --profile test build
 
 docker/test:
 	@docker-compose run --rm test
@@ -57,38 +55,38 @@ docker/restart: ## Restart the application.
 	@docker-compose restart
 
 docker/make-migrations: ## Create Django migrations.
-	@docker-compose run --rm magnificent-web make make-migrations
+	@docker-compose run --rm user-web make make-migrations
 
 docker/migrate: ## Run Django migrations.
-	@docker-compose run --rm magnificent-web make migrate
+	@docker-compose run --rm user-web make migrate
 
 docker/shell: ## Open Django shell.
-	@docker-compose run --rm magnificent-web make shell
+	@docker-compose run --rm user-web make shell
 
 docker/create-super-user: ## create Django Super User
-	@docker-compose run --rm -it magnificent-web make create-super-user
+	@docker-compose run --rm -it user-web make create-super-user
 
 docker/create-admin: ## create Django Admin User
-	@docker-compose run --rm -it magnificent-web make create-admin
+	@docker-compose run --rm -it user-web make create-admin
 
 docker/get-admin-token: ## get Django Admin Token
-	@docker-compose run --rm -it magnificent-web make get-admin-token
+	@docker-compose run --rm -it user-web make get-admin-token
 
 docker/run-django: ## Run Django command.
-	@docker-compose run --rm magnificent-web python manage.py $(filter-out $@,$(MAKECMDGOALS))
+	@docker-compose run --rm user-web python manage.py $(filter-out $@,$(MAKECMDGOALS))
 
 build-and-push-prod: ## Build and push docker image for production
- @docker build $(APP_ROOT) -f $(APP_ROOT)/Dockerfile -t $(IMAGE_NAME)
- @docker push $(IMAGE_NAME)
+	@docker build $(APP_ROOT) -f $(APP_ROOT)/Dockerfile -t $(IMAGE_NAME)
+	@docker push $(IMAGE_NAME)
 
 update-argoconfig:
- @kubectl set image --filename k8s/dev/deployment.yaml magnificent-api=$(IMAGE_NAME) --local -o yaml > new-deployment.yaml
- @cat new-deployment.yaml
- @rm -rf k8s/dev/deployment.yaml
- @mv new-deployment.yaml k8s/dev/deployment.yaml
-
+	@kubectl set image --filename k8s/dev/deployment.yaml magnificent-backend=$(IMAGE_NAME) --local -o yaml > new-deployment.yaml
+	@cat new-deployment.yaml
+	@rm -rf k8s/dev/deployment.yaml
+	@mv new-deployment.yaml k8s/dev/deployment.yaml
+	
 deploy: build-and-push-prod update-argoconfig ## Deploy to kubernetes
- @echo "Completed!"
+	@echo "Completed!"
 
 help:
 	@echo -e "\n Usage: make [target]\n"

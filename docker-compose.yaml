@@ -14,7 +14,7 @@ services:
       timeout: 5s
       retries: 5
 
-  magnificent-web:
+  magnificent-api:
     platform: linux/amd64
     stdin_open: true
     tty: true
