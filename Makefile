@@ -80,7 +80,7 @@ build-and-push-prod: ## Build and push docker image for production
 	@docker push $(IMAGE_NAME)
 
 update-argoconfig:
-	@kubectl set image --filename k8s/dev/deployment.yaml magnificent-backend=$(IMAGE_NAME) --local -o yaml > new-deployment.yaml
+	@kubectl set image --filename k8s/dev/deployment.yaml magnificent-api=$(IMAGE_NAME) --local -o yaml > new-deployment.yaml
 	@cat new-deployment.yaml
 	@rm -rf k8s/dev/deployment.yaml
 	@mv new-deployment.yaml k8s/dev/deployment.yaml
