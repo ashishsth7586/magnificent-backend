@@ -24,7 +24,7 @@ spec:
         app: magnificent-app
     spec:
       containers:
-        image: nginx
+        image: 970160214347.dkr.ecr.us-east-1.amazonaws.com/magnificent-ecr-repo:magnificent-api-master-f6ba925bcf2cb74c8d79efcfcec1910edbee2c1f
         name: magnificent-app
         ports:
         - containerPort: 8000
